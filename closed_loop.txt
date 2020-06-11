@@ -1,0 +1,62 @@
+function [final_pose]=closed_loop_control(path,Ld,T,start_pos)
+
+%vehicle parameters :
+L = 3; 
+
+%create constraint vectors
+gamma_max = deg2rad(55); 
+Vmax=4;
+V=1;
+
+global dT;
+global DT;
+dT = 0.001; DT = 0.01; 
+
+tau_g = 0.1; %time-lag for turning angle
+tau_v = 0.2; %time-lag for velocity
+
+% start_pos=start_pos;
+Qmax(1) = inf; Qmax(2)=inf; Qmax(3) = inf; %state constraint
+Qmax(4) = gamma_max; Qmax(5) = Vmax;%state constraint
+Qmin = -Qmax; %minimum constraints.
+Umax = [gamma_max Vmax]'; %input constraint
+Umin= -Umax;%input constraint
+
+
+
+
+robot_tracker = zeros();
+count = 1;
+q_true=start_pos;
+epilison=0.1;
+current_position=[q_true(1);q_true(2)];
+end_position=[path(end,1);path(end,2)];
+
+h = waitbar(0, 'Calculating path');
+for t = 0:DT:T
+    e_x=current_position(1)-end_position(1);
+    e_y=current_position(2)-end_position(2);
+    if abs(e_x+e_y)<epilison
+        disp('position reached');
+%         f = msgbox('position reached - Terminating closed loop');
+        break
+    end 
+    [gamma, cross_track_error] = purePursuitController(q_true, L, Ld, path);
+    u = [gamma V];
+   [q_true_next, odo_next] = robot_odo(q_true, u, Umin, Umax, Qmin, Qmax, L, tau_g, tau_v);   
+    
+    robot_tracker(count,1:2) = q_true(1:2);
+    count = count+1;
+    
+    waitbar(t/T);
+    q_true = q_true_next;
+    current_position=[q_true(1);q_true(2)];
+    
+end
+final_pose=[q_true(1);q_true(2);q_true(3)];
+close(h);
+
+figure(1); hold on; axis equal;
+plot(robot_tracker(1:end,1)', robot_tracker(1:end,2)', 'k')
+
+
