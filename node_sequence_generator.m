@@ -1,3 +1,5 @@
+function []=node_sequence_generator()
+
 clc
 clf 
 clear all
@@ -56,35 +58,69 @@ X(1,3*N+2)=1;                                               % end node   x' co-o
 Y(1,1)=0;                                                   % start node y' co-ordinate
 Y(1,3*N+2)=0;                                               % end node   y' co-ordinate
 
-%% Visual check of orchard 
+%% Visual check of orchard / 
 grid on
 clf 
 figure(1)
-plot(X,Y,'o')                  
-
-%% Computation of the cost matrix DMAT 
+% Node plots
+X_plot=X(1:19);
+Y_plot=Y(1:19);
+plot(X_plot,Y_plot,'o')                  
+% title('Orchard Nodes to be traversed')
+% xlabel('X axis')
+% ylabel('Y axis')
+% Number labels
+x_1=0.5;
+y_1=-0.05;
+for i=1:20
+    if i==1
+        y_1=1;
+    else 
+        y_1=-0.05;
+    end
+    X_1(1,i)=X(1,i)+x_1;
+    Y_1(1,i)=Y(1,i)+y_1;
+end
+for i=1:length(X)
+    if i==20
+        break
+    end
+    text(X_1(i),Y_1(i),num2str(i))
+    hold on
+end
+% Node plots
+figure(2)
+hold on
+for i=1:length(X)
+    if i==20
+        break
+    end
+    text(X_1(i),Y_1(i),num2str(i))
+    hold on
+end
+%% Computation of the cost matrix DMAT
 % Four parts :
 % 1.Non turning Costs
 % 2.Turning costs (pi/omega turns)
-% 3.Start and end node to other nodes costs  
+% 3.Start and end node to other nodes costs
 % 4.Cost from same node to same node
 
 DMAT=zeros(3*N+2,3*N+2);
-% Soft constraints 
-huge=10^20;                         
+% Soft constraints
+huge=10^20;
 small=-100;
 sp_huge=10^25;
 
 
 % 1. Non turning costs / straight lines
-% 1.1 From bottom to middle row movement 
+% 1.1 From bottom to middle row movement
 for i=2:N+1                                                 % bottom row
     for j=N+2:2*N+1                                         % middle row
         if (j-i)==N                                         % both nodes are in same row
             DMAT(i,j)=small;
             DMAT(j,i)=small;
         else                                                % i and j are not of the same row:Assign cost to huge
-            DMAT(i,j)=huge;         
+            DMAT(i,j)=huge;
             DMAT(j,i)=huge;
         end
     end
@@ -210,5 +246,7 @@ display(route)
 %% Compute the path for Pure pursuit to follow 
 
 path_generator(route,XY,R_min);
+global Q_TRUE;
+
 
 

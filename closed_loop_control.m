@@ -3,10 +3,6 @@ function [final_pose,final_pred]=closed_loop_control(path,Ld,T,q_true,q_pred)
 
 varianceOdo = [0.0025 1.1420e-04]; %varaince in noise from odometery (distance, theta)
 varianceGPS = [8.8084e-04 9.5809e-04 4.0491e-04]; %variance in noise for x from gps (x, y, theta)
-%equate the start position for the current path 
-
-gpssamplerate=100;
-
 
 %vehicle parameters :
 L = 3; 
@@ -18,7 +14,8 @@ v=1;
 
 global dT;
 global DT;
-dT = 0.001; DT = 0.01; 
+global Q_TRUE;
+dT = 0.01; DT = 0.01; 
 
 tau_g = 0.1; %time-lag for turning angle
 tau_v = 0.2; %time-lag for velocity
@@ -47,13 +44,13 @@ end_position=[path(end,1);path(end,2)]; % end positon that the robot needs to st
 
 
 
-h = waitbar(0, 'Calculating path');
+h = waitbar(0, 'Calculating Path Traversed');
 for t = 0:DT:T
     %% Check for if goal position is reached 
     e_x=current_position(1)-end_position(1); % differnce bettwen x co ordinates of goal and current point 
     e_y=current_position(2)-end_position(2);% differnce bettwen y co ordinates of goal and current point 
     if abs(e_x+e_y)<epilison % if the current point is near goal point stop / break out of loop
-        disp('position reached');
+        disp('position reached- Terminating closed loop');
 %         f = msgbox('position reached - Terminating closed loop');
         break % break out of loop since goal point has been reached
     end 
@@ -107,6 +104,7 @@ for t = 0:DT:T
     
     
     waitbar(t/T);
+    Q_TRUE(:,count)=q_true;
     q_true = q_true_next;
     q_pred=q_pred_next;
     current_position=[q_true(1);q_true(2)];
@@ -120,6 +118,10 @@ close(h);
 figure(1); hold on; axis equal;
 plot(robot_tracker_true(1:end,1)', robot_tracker_true(1:end,2)', 'k')
 plot(robot_tracker_pred(1:end,1)', robot_tracker_pred(1:end,2)', 'b')
+title('True path VS Predicted path')
+xlabel('X axis')
+ylabel('Y axis')
+legend('Nodes','Ground Truth','EKF Estimation')
 
 
 

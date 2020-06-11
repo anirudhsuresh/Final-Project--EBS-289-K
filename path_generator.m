@@ -77,6 +77,10 @@ for i=1:n-1
 
     hold on
     grid
-%     figure(2)
+    figure(2)
+    plot_d(path(1:end,1)', path(1:end,2)','-k',70,0.5);
+    title('Optimal Route Generated')
+    xlabel('X axis')
+    ylabel('Y axis')
 %     plot(path(1:end,1)', path(1:end,2)', '-x');
 end
