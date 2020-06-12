@@ -23,9 +23,10 @@ for i=1:n-1
             counter=1;
             initial_pose=[0;0;pi/2;0;0];
             initial_pred=[0;0;pi/2];
+            P_ini=zeros(3);
         end
         path = manhattan_path_generator(start_p, end_p); %Then its a manhattan path
-        [final_pose,final_pred]=manhattan_path_passing(path,counter,initial_pose,initial_pred);
+        [final_pose,final_pred,P_end]=manhattan_path_passing(path,counter,initial_pose,initial_pred,P_ini);
 %        
     elseif abs(p-e)==N      % its a straight line
         if i==2
@@ -40,7 +41,7 @@ for i=1:n-1
             %         else
             %             path=path;
         end
-        [final_pose,final_pred]=st_line_path_passing(path,initial_pose,initial_pred,counter);
+        [final_pose,final_pred,P_end]=st_line_path_passing(path,initial_pose,initial_pred,counter,P_ini);
     else                        % its a headland manuver
         %         to identify the direction of the current turn
         
@@ -63,7 +64,7 @@ for i=1:n-1
             path= pi_turn_generator(R_min, dist_n,start_p, direction);
             d2=(pi-2)*R_min;
             d3=dist_n+d2;
-            [final_pose,final_pred]=pi_turn_passing(path,initial_pose,initial_pred,d3); 
+            [final_pose,final_pred,P_end]=pi_turn_passing(path,initial_pose,initial_pred,d3,P_ini); 
         else                % else omega turn
             path= omega_turn(R_min, dist_n,start_p, direction);
 %             final_position=omega_turn_pg(path,start_position);
@@ -73,6 +74,7 @@ for i=1:n-1
 
     initial_pose=final_pose;
     initial_pred=final_pred;
+    P_ini=P_end;
     length_path=length(path);
     for k=1:length_path
         total_path(j+k,1)=path(k,1);

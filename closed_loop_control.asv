@@ -8,7 +8,7 @@ function [final_pose,final_pred,P_end]=closed_loop_control(path,Ld,T,q_true,q_pr
 %vehicle parameters :
 L = 3; 
 varianceGPS=[0.000885970690691681,0.000886540428368619,0.000399979236563813];
-varianceOdo=[0.00243157008095900,0.000110309828567493];
+[0.00243157008095900,0.000110309828567493]
 %create constraint vectors
 gamma_max = deg2rad(55); 
 Vmax=4;
