@@ -7,7 +7,7 @@
 % %   path=pi_turn1(r, dw, pos, direction)
 % 
 %  
-function path = pi_turn(R, d_nodes, start_p, direction)
+function path = pi_turn_generator(R, d_nodes, start_p, direction)
 
     a = 0:-0.1:-pi/2;
     x = R+R*sin(a);

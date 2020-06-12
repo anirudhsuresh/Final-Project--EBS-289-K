@@ -1,5 +1,5 @@
 
-function [final_pose,final_pred]=mahattan_path_passing(path,counter,initial_pose,initial_pred)
+function [final_pose,final_pred]=manhattan_path_passing(path,counter,initial_pose,initial_pred)
 Ld=3;
 % start_point=path(1,:);
 end_point=path(end,:);

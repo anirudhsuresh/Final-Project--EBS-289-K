@@ -1,4 +1,4 @@
-function []=node_sequence_generator()
+function []=optimal_route_generator()
 
 clc
 clf 
@@ -238,7 +238,7 @@ end
 XY = [X' Y'];
 t = cputime;  
 resultStruct = tspof_ga('xy', XY , 'DMAT', DMAT, 'SHOWRESULT',false, 'SHOWWAITBAR', false, 'SHOWPROG', false); 
-E = cputime-t; %print time required to compute it.   
+% E = cputime-t; %print time required to compute it.   
 route = [1 resultStruct.optRoute 3*N+2]; % extract node sequence   
 display(route)
 

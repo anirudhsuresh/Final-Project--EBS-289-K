@@ -1,4 +1,4 @@
-function path_m = manhattan_path(start, finish)
+function path_m = manhattan_path_generator(start, finish)
 path_count = 1;
 
 if start(1) < finish(1) && start(2) < finish(2)

@@ -24,10 +24,15 @@ for i=1:n-1
             initial_pose=[0;0;pi/2;0;0];
             initial_pred=[0;0;pi/2];
         end
-        path = manhattan_path(start_p, end_p); %Then its a manhattan path
-        [final_pose,final_pred]=mahattan_path_passing(path,counter,initial_pose,initial_pred);
+        path = manhattan_path_generator(start_p, end_p); %Then its a manhattan path
+        [final_pose,final_pred]=manhattan_path_passing(path,counter,initial_pose,initial_pred);
 %        
     elseif abs(p-e)==N      % its a straight line
+        if i==2
+            counter=1;
+        else 
+            counter=0;
+        end 
         path=Line_way_p_gen(start_p,end_p,pts);
         if p>e
             % north to south node
@@ -35,7 +40,7 @@ for i=1:n-1
             %         else
             %             path=path;
         end
-        [final_pose,final_pred]=st_line_path_passing(path,initial_pose,initial_pred);
+        [final_pose,final_pred]=st_line_path_passing(path,initial_pose,initial_pred,counter);
     else                        % its a headland manuver
         %         to identify the direction of the current turn
         
@@ -55,7 +60,7 @@ for i=1:n-1
         dist_n = abs(start_p(1) - end_p(1));
         
         if dist_n>=2*R_min      % if dist_n is greater than the 2*Rmin then its a pi turn
-            path= pi_turn(R_min, dist_n,start_p, direction);
+            path= pi_turn_generator(R_min, dist_n,start_p, direction);
             d2=(pi-2)*R_min;
             d3=dist_n+d2;
             [final_pose,final_pred]=pi_turn_passing(path,initial_pose,initial_pred,d3); 
