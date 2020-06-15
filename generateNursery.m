@@ -40,7 +40,8 @@ for j=1:K
 end
 
 figure(1); 
-imagesc(x_im, y_im, bitmap); %imagesc flips the bitmap rows, so correct this
-%imagesc(x_im, y_im, flipud(bitmap)); %imagesc flips the bitmap rows, so correct this
+
+imagesc(bitmap);
+
 set(gca,'YDir','normal');
 axis equal
